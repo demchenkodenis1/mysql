@@ -1,0 +1,73 @@
+SELECT * FROM users LIMIT 10;
+UPDATE users SET updated_at = NOW() WHERE updated_at < created_at;                 
+SELECT * FROM users WHERE updated_at < created_at;
+UPDATE profiles SET updated_at = NOW() WHERE updated_at < created_at;                 
+SELECT * FROM cities;
+select floor(1 + rand() * 100);
+UPDATE profiles SET city_id = FLOOR(1 + RAND() * 100);
+desc messages;
+SELECT * FROM messages LIMIT 10;
+
+select floor(1 + rand() * 100);
+UPDATE messages SET to_user_id = FLOOR(1 + RAND() * 100);
+UPDATE messages SET from_user_id = FLOOR(1 + RAND() * 100);
+UPDATE messages SET media_id = FLOOR(1 + RAND() * 100);
+update messages set to_user_id  = from_user_id + 1 where to_user_id = from_user_id;
+select * from messages where to_user_id = from_user_id;
+update messages set delivered_at = MAKEDATE(2021,(1 + rand() * 100));
+SELECT * FROM messages WHERE delivered_at < created_at;
+UPDATE messages SET delivered_at = NOW() WHERE delivered_at < created_at;                 
+SELECT * FROM media LIMIT 10;
+SELECT * FROM media WHERE updated_at < created_at;
+UPDATE media SET updated_at = NOW() WHERE updated_at < created_at;                 
+
+UPDATE media SET user_id = FLOOR(1 + RAND() * 100);
+UPDATE media SET filename = '';
+
+UPDATE media SET filename = lpad(conv(floor(rand()*pow(36,6)), 10, 36), 6, 0);
+-- DROP TABLE extensions;
+
+CREATE TEMPORARY TABLE extensions(name VARCHAR(10));
+INSERT INTO extensions VALUES
+  ('.avi'),
+  ('.png'),
+  ('.mpeg4'),
+  ('.mp3'),
+  ('jpeg');
+update media set filename = concat('http://dropbox.net/vk/', filename, (SELECT name FROM extensions ORDER BY RAND() LIMIT 1));
+update media set size = floor(10000 + rand() * 100000000) where size < 1000;
+desc media;
+update media set metadata = concat(
+	'{"owner":"',
+	(select concat(first_name, ' ', last_name)
+	from users where users.id = media.user_id),
+	'"}');
+ALTER TABLE media MODIFY COLUMN metadata JSON;
+SELECT * FROM media_types;
+DELETE FROM media_types;
+insert into media_types (name) values
+('photo'), ('video'), ('audio');
+truncate media_types;
+UPDATE media SET media_type_id = FLOOR(1 + RAND() * 3);
+SELECT * FROM friendship LIMIT 10;
+UPDATE friendship SET 
+  user_id = FLOOR(1 + RAND() * 100),
+  friend_id = FLOOR(1 + RAND() * 100);
+SELECT * FROM friendship_statuses;
+TRUNCATE friendship_statuses;
+INSERT INTO friendship_statuses (name) VALUES
+  ('Requested'),
+  ('Confirmed'),
+  ('Rejected');
+UPDATE friendship SET friendship_status_id = FLOOR(1 + RAND() * 3); 
+SELECT *FROM friendship WHERE confirmed_at < created_at;
+desc friendship;
+update friendship set confirmed_at = MAKEDATE(rand() + 20,(1 + rand() * 100));
+DESC communities;
+SELECT * FROM communities;
+DELETE FROM communities WHERE id > 30;
+SELECT * FROM communities_users;
+update communities_users set user_id = FLOOR(1 + RAND() * 100), community_id = FLOOR(1 + RAND() * 30);
+DESC communities_users;
+TRUNCATE communities_users;
+
