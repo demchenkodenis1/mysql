@@ -233,5 +233,65 @@ INSERT INTO target_types (name) VALUES
   ('playlists'),
   ('perfomer');
 
+-- Добавляем внешние ключи
+ALTER TABLE users DROP FOREIGN KEY users_cities_id_fk;
+alter table users add constraint users_cities_id_fk foreign key (cities_id) references cities(id) ON DELETE set null;
+
+ALTER TABLE cities DROP FOREIGN KEY cities_countries_id_fk;
+alter table cities add constraint cities_countries_id_fk foreign key (countries_id) references countries(id) ON DELETE set null;
+
+ALTER TABLE perfomer DROP FOREIGN KEY perfomer_song_id_fk;
+ALTER TABLE perfomer DROP FOREIGN KEY perfomer_discography_id_fk;
+ALTER TABLE perfomer DROP FOREIGN KEY perfomer_playlists_id_fk;
+alter table perfomer add constraint perfomer_song_id_fk foreign key (song_id) references songs(id) ON DELETE CASCADE,
+add constraint perfomer_discography_id_fk foreign key (discography_id) references discography(id) ON DELETE CASCADE,
+add constraint perfomer_playlists_id_fk foreign key (playlists_id) references playlists(id) ON DELETE CASCADE;
+
+ALTER TABLE subscribers DROP FOREIGN KEY subscribers_user_id_fk;
+ALTER TABLE subscribers DROP FOREIGN KEY subscribers_subscription_statuses__id_fk;
+alter table subscribers add constraint subscribers_user_id_fk foreign key (user_id) references users(id) ON DELETE CASCADE;
+alter table subscribers add constraint subscribers_subscription_statuses__id_fk foreign key (subscription_statuses__id) references subscription_statuses(id) ON DELETE CASCADE;
+
+
+ALTER TABLE users DROP FOREIGN KEY users_cities_id_fk;
+ALTER TABLE playlists DROP FOREIGN KEY playlists_user_id_fk;
+ALTER TABLE playlists DROP FOREIGN KEY playlists_song_id_fk;
+
+alter table users add constraint users_cities_id_fk foreign key (cities_id) references cities(id)  ON DELETE set null;
+alter table playlists add constraint playlists_user_id_fk foreign key (user_id) references users(id) ON DELETE CASCADE,
+add constraint playlists_song_id_fk foreign key (song_id) references songs(id) ON DELETE CASCADE;
+
+ALTER TABLE discography DROP FOREIGN KEY discography_album_id_fk;
+alter table discography add constraint discography_album_id_fk foreign key (album_id) references albums(id) ON DELETE CASCADE;
+
+ALTER TABLE recently_listened DROP FOREIGN KEY recently_listened_song_id_fk;
+
+alter table recently_listened add constraint recently_listened_song_id_fk foreign key (song_id) references songs(id) ON DELETE CASCADE;
+
+ALTER TABLE concerts DROP FOREIGN KEY concerts_perfomer_id_fk;
+ALTER TABLE concerts DROP FOREIGN KEY concerts_countries_id_fk;
+ALTER TABLE concerts DROP FOREIGN KEY concerts_cities_id_fk;
+
+alter table concerts add constraint concerts_perfomer_id_fk foreign key (perfomer_id) references perfomer(id) ON DELETE cascade,
+add constraint concerts_countries_id_fk foreign key (countries_id) references countries(id) ON DELETE cascade,
+add constraint concerts_cities_id_fk foreign key (cities_id) references cities(id) ON DELETE cascade;
+
+ALTER TABLE subscribers DROP FOREIGN KEY subscribers_subscription_statuses__id_fk;
+alter table subscribers add constraint subscribers_subscription_statuses__id_fk foreign key (subscription_statuses__id) references subscription_statuses(id) ON DELETE CASCADE;
+
+ALTER TABLE genre DROP FOREIGN KEY genre_song_id_fk;
+alter table genre add constraint genre_song_id_fk foreign key (song_id) references songs(id) ON DELETE CASCADE;
+
+ALTER TABLE genre DROP FOREIGN KEY genre_playlists_id_fk;
+alter table genre add constraint genre_playlists_id_fk foreign key (playlists_id) references playlists(id) ON DELETE CASCADE;
+
+ALTER TABLE favorites DROP FOREIGN KEY favorites_user_id_fk;
+alter table favorites add constraint favorites_user_id_fk foreign key (user_id) references users(id) ON DELETE CASCADE;
+
+ALTER TABLE subscriptions DROP FOREIGN KEY subscriptions_users_id_fk;
+alter table subscriptions add constraint subscriptions_users_id_fk foreign key (users_id) references users(id) ON DELETE CASCADE;
+
+ALTER TABLE subscriptions DROP FOREIGN KEY subscriptions_perfomer_id_fk;
+alter table subscriptions add constraint subscriptions_perfomer_id_fk foreign key (perfomer_id) references perfomer(id) ON DELETE CASCADE;
 
 
